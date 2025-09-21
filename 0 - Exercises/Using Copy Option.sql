@@ -1,0 +1,38 @@
+USE DATABASE COPY_DB;
+
+CREATE OR REPLACE TABLE EMPLOYEES(
+    CUSTOMER_ID     INTEGER,
+    FIRST_NAME      VARCHAR(50),
+    LAST_NAME       VARCHAR(50),
+    EMAIL           VARCHAR(50),
+    AGE             INTEGER,
+    DEPARTMENT      VARCHAR(50));
+
+
+CREATE OR REPLACE STAGE AWS_COPY_OPTIONS
+    url = 's3://snowflake-assignments-mc/copyoptions/example1/';
+
+LIST @AWS_COPY_OPTIONS;
+
+CREATE FILE FORMAT CSV_FORMAT
+    TYPE = 'CSV',
+    FIELD_DELIMITER = ',',
+    SKIP_HEADER = 1;
+
+
+DESC FILE FORMAT CSV_FORMAT;
+
+COPY INTO EMPLOYEES 
+    FROM @AWS_COPY_OPTIONS
+    file_format = (FORMAT_NAME=CSV_FORMAT)
+    files = ('employees.csv')
+    VALIDATION_MODE = RETURN_ERRORS;
+
+COPY INTO EMPLOYEES 
+    FROM @AWS_COPY_OPTIONS
+    file_format = (FORMAT_NAME=CSV_FORMAT)
+    files = ('employees.csv')
+    ON_ERROR = CONTINUE;
+    
+
+
