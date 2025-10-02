@@ -62,7 +62,10 @@ alter masking policy name set body ->
             case
             when current_role() in ('ANALYST_FULL') then val
             else CONCAT('***',RIGHT(val,2))
-            end;
+ 
+Search for files
+Search for files
+           end;
 
 -- 7. Apply the masking policy on the column full_name    
 
